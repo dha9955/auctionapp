@@ -25,7 +25,7 @@ exports.createAddress = (req, res) => {
   address.save((error, address) => {
     if (error) return res.status(400).json({ error });
     if (address) {
-      User.findOne({ _id: req.user._id }).exec((error, user) => {
+      User.findOne({ _id: req.body.userId }).exec((error, user) => {
         if (error) return res.status(400).json({ error });
         else{
             user.address = address._id
