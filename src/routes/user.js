@@ -5,9 +5,7 @@ const {getUserbyId, getUserbyToken} = require("../controllers/user")
 
 router.get("/user/:userId", requireSignin, userMiddleware, getUserbyId)
 
-
-
-router.get("/getuserbytoken", getUserbyToken)
+router.get("/getuserbytoken/:token", getUserbyToken)
 
 
 module.exports = router;

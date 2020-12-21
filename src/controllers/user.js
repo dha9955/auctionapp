@@ -16,7 +16,7 @@ exports.getUserbyId = (req, res) => {
 };
 
 exports.getUserbyToken = (req, res) => {
-  const token = req.body.token
+  const {token} = req.params
   const decoded = jwt.decode(token, {complete: true})
   console.log(decoded.payload._id)
   User.findOne({_id:decoded.payload._id}).exec((error, user)=>{
