@@ -4,7 +4,7 @@ const { createAddress, getAddressByUser } = require('../controllers/address');
 const router = express.Router();
 
 
-router.post('/user/address/create', requireSignin, userMiddleware, createAddress);
-router.get('/user/getaddressbyuser/:userId', requireSignin, userMiddleware, getAddressByUser);
+router.post('/user/address/create', createAddress);
+router.get('/user/getaddressbyuser/:userId', getAddressByUser);
 
 module.exports = router;
