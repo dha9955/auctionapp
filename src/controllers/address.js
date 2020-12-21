@@ -10,6 +10,7 @@ exports.createAddress = (req, res) => {
     city,
     alternatePhone,
     addressType,
+    userId,
   } = req.body;
   const address = new Address({
     mobileNumber: mobileNumber,
