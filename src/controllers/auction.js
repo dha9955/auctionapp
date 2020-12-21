@@ -1,7 +1,7 @@
 const e = require("express");
 const Auction = require("../models/auction");
 const Product = require("../models/product");
-
+const User = require("../models/user")
 exports.createAuction = (req, res) => {
   Product.findOne({ _id: req.body.product }).exec((error, product) => {
     if (error) return res.status(400).json({ error });
@@ -16,7 +16,7 @@ exports.createAuction = (req, res) => {
         if (auction) {
           product.currentPrice = auction.price;
           product.save();
-          return res.status(200).json({ auction });
+          return res.status(201).json({ auction });
         }
       });
     }
@@ -26,11 +26,10 @@ exports.createAuction = (req, res) => {
 exports.getAuctionbyProduct = (req, res) => {
   const { productId } = req.params;
   if (productId) {
-    Auction.find({ product: productId }).exec((error, auctions) => {
+    Auction.find({ product: productId }).populate({path:"user",select: "_id username"}).exec((error, auctions) => {
       if (error) return res.status(400).json({ error });
       if (auctions) {
-        total = auctions.length;
-        res.status(200).json({ total, auctions });
+        return res.status(200).json({ auctions });
       }
     });
   } else {
