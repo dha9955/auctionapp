@@ -20,7 +20,7 @@ exports.createAddress = (req, res) => {
     city,
     alternatePhone,
     addressType,
-    user: req.user._id,
+    user: userId,
   });
   address.save((error, address) => {
     if (error) return res.status(400).json({ error });
