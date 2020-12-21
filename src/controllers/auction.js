@@ -7,7 +7,7 @@ exports.createAuction = (req, res) => {
     if (error) return res.status(400).json({ error });
     if (product) {
       const auction = new Auction({
-        user: req.user._id,
+        user: req.body.userId,
         product: req.body.product,
         price: product.currentPrice + product.stepUp,
       });
