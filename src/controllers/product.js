@@ -64,6 +64,7 @@ exports.getProductByCategory = (req, res) => {
   }
 };
 
+
 exports.sortProductByExpiredAt = (req, res) => {
   Product.find({ status: 1 })
     .sort({ expiredAt: 1 })
@@ -75,6 +76,8 @@ exports.sortProductByExpiredAt = (req, res) => {
       }
     });
 };
+
+
 exports.sortDealInDay = (req, res) => {
   Product.find({ expiredAt: { $eq: Date() } }).exec((error, products) => {
     if (error) return res.status(400).json({ error });
