@@ -12,6 +12,7 @@ exports.createProduct = (req, res) => {
     category,
     brand,
     time,
+    userId
   } = req.body;
   let productPictures = req.body.productPictures;
   const product = new Product({
@@ -25,7 +26,7 @@ exports.createProduct = (req, res) => {
     productPictures,
     category,
     brand,
-    owner: req.user._id,
+    owner: userId,
     expiredAt: moment().add(time, "d").format(),
   });
   product.save((error, product) => {

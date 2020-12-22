@@ -13,6 +13,7 @@ const auctionRoutes = require("./routes/auction");
 const userRoutes = require("./routes/user");
 const ratingRoutes = require("./routes/rating")
 const addressRoutes = require("./routes/address");
+const orderRoutes = require("./routes/order");
 //environment variable
 env.config();
 
@@ -40,7 +41,7 @@ app.use("/api", userRoutes);
 app.use("/api", manageUserRoutes);
 app.use("/api", ratingRoutes);
 app.use("/api", addressRoutes);
-
+app.use("/api", orderRoutes);
 
 
 app.listen(process.env.PORT, () => {

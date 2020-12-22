@@ -1,9 +1,9 @@
 const express = require('express');
 const { requireSignin, userMiddleware } = require('../common-middleware');
-const { createAddress, getAddressByUser } = require('../controllers/address');
+const { createOrder } = require('../controllers/order');
 const router = express.Router();
 
 
-router.get('/user/getaddressbyuser/:userId', getAddressByUser);
+router.post('/order/create', createOrder);
 
 module.exports = router;

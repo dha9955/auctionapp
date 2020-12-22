@@ -6,17 +6,25 @@ const orderSchema = new mongoose.Schema({
     required: true,
     ref: "User",
   },
-  auctionId: {
+  productId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: "Auction",
+    ref: "Product",
   },
-  addressId:{
+  price: {
+    type: Number,
+  },
+  status: {
+    type: String,
+  },
+  addressId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: "Address",
-  }
+  },
+  star: {
+    type: Number,
+  },
 });
-
 
 module.exports = mongoose.model("Order", orderSchema);

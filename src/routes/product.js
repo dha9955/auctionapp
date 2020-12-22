@@ -14,8 +14,6 @@ const router = express.Router();
 router.get("/product/getallproducts", getAllProducts)
 router.post(
   "/product/create",
-  requireSignin,
-  userMiddleware,
   createProduct
 );
 router.patch("/product/checkexpiredproducts", checkExpiredProducts);
