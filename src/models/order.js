@@ -25,6 +25,9 @@ const orderSchema = new mongoose.Schema({
   star: {
     type: Number,
   },
+  comment:{
+    type: String,
+  }
 });
 
 module.exports = mongoose.model("Order", orderSchema);

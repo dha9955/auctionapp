@@ -40,43 +40,45 @@ exports.createOrder = (req, res) => {
   });
 };
 
-exports.getOrderbyUser = (req, res) =>{
-  const {userId} = req.params
-  Order.findOne({userId:userId}).exec((error, order)=>{
+exports.getOrderbyUser = (req, res) => {
+  const { userId } = req.params;
+  Order.find({ userId: userId }).exec((error, order) => {
     if (error) return res.status(400).json({ error });
-    if(order){
+    if (order) {
+      console.log(order.star);
       res.status(200).json({ order });
     }
-  })
-}
+  });
+};
 
 exports.rateUser = (req, res) => {
-  Order.findOne({_id: req.body.orderId}).exec( (error, order)=>{
+  Order.findOne({ _id: req.body.orderId }).exec((error, order) => {
     if (error) return res.status(400).json({ error });
-    if(order){
+    if (order) {
       order.star = req.body.star;
+      order.comment = req.body.comment;
       order.save();
       let count = 0;
       let total = 0;
-      Order.find({userId:order.userId}).exec((error, orders)=>{
+      Order.find({ userId: order.userId }).exec((error, orders) => {
         if (error) return res.status(400).json({ error });
-        else{
-          for(let ord of orders){
-            if(ord.star!=null){
+        else {
+          for (let ord of orders) {
+            if (ord.star != null) {
               count = count + 1;
               total = total + ord.star;
             }
           }
+          User.findOne({ _id: order.userId }).exec((error, user) => {
+            if (error) return res.status(400).json({ error });
+            if (user) {
+              user.rating = total / count;
+              user.save();
+              res.status(201).json({ message: " Thank you for rating ...." });
+            }
+          });
         }
       });
-      User.findOne({_id: order.userId}).exec((error, user)=>{
-        if (error) return res.status(400).json({ error });
-        if(user){
-          user.rating = total/count;
-          user.save()
-          res.status(201).json({ message:" Thank you for rating ...." });
-        }
-      })
     }
-  })
-}
+  });
+};

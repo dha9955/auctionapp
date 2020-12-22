@@ -48,3 +48,13 @@ exports.getAddressByUser = (req, res) => {
     }
   });
 };
+
+exports.getAddressById = (req, res) => {
+  const {addressId} = req.params
+  Address.find({ _id: addressId }).exec((error, address) => {
+    if (error) return res.status(400).json({ error });
+    if (address) {
+      res.status(201).json({ address });
+    }
+  });
+}

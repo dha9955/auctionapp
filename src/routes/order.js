@@ -1,6 +1,6 @@
 const express = require('express');
 const { requireSignin, userMiddleware } = require('../common-middleware');
-const { createOrder, rateUser, getOrderbyUser } = require('../controllers/order');
+const { createOrder, rateUser, getOrderbyUser} = require('../controllers/order');
 const router = express.Router();
 
 
