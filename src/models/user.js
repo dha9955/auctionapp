@@ -35,6 +35,7 @@ const userSchema = new mongoose.Schema(
     },
     rating: {
       type: Number,
+      default:0,
     },
     contactNumber: { type: String },
     address: [{

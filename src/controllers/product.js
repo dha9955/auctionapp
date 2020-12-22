@@ -73,7 +73,7 @@ exports.sortProductByExpiredAt = (req, res) => {
       if (error) return res.status(400).json({ error });
       if (products) {
         total = products.length;
-        return res.status(200).json({ products });
+        return res.status(200).json({ total, products });
       }
     });
 };
@@ -170,4 +170,15 @@ exports.getProductByBrand = (req,res) => {
   } else {
     return res.status(400).json({ error: "Params required" });
   }
+}
+
+
+exports.deleteProductbyId = (req, res) => {
+  const {productId} = req.params
+  Product.findOneAndDelete({_id:productId}).exec((error, product)=>{
+    if (error) return res.status(400).json({ error });
+    if(product){
+      res.status(201).json({ message: "Product Removed" });
+    }
+  })
 }

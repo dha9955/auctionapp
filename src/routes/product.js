@@ -7,7 +7,8 @@ const {
   getProductByCategory,
   sortProductByExpiredAt,
   checkExpiredProducts,
-  getProductByBrand
+  getProductByBrand,
+  deleteProductbyId
 } = require("../controllers/product");
 const router = express.Router();
 
@@ -16,6 +17,7 @@ router.post(
   "/product/create",
   createProduct
 );
+router.delete("/product/deleteproductbyid/:productId",deleteProductbyId )
 router.patch("/product/checkexpiredproducts", checkExpiredProducts);
 router.get("/product/getproductbyid/:productId", getProductById);
 router.get("/product/getproductbycategory/:category",getProductByCategory)
