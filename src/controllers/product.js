@@ -1,5 +1,6 @@
 const Product = require("../models/product");
 const moment = require("moment");
+const {paginationData} = require("../common-middleware/pagination")
 
 exports.createProduct = (req, res) => {
   const {
@@ -51,13 +52,16 @@ exports.getProductById = (req, res) => {
   }
 };
 exports.getProductByCategory = (req, res) => {
+  const page = parseInt(req.query.page);
+  const limit = parseInt(req.query.limit); 
   const { category } = req.params;
   if (category) {
     Product.find({ category: category, status: 1 }).exec((error, products) => {
       if (error) return res.status(400).json({ error });
       if (products) {
         total = products.length;
-        res.status(200).json({ total, products });
+        const results = paginationData(products, page, limit);
+        res.status(200).json({ total, results });
       }
     });
   } else {
@@ -67,13 +71,16 @@ exports.getProductByCategory = (req, res) => {
 
 
 exports.sortProductByExpiredAt = (req, res) => {
+  const page = parseInt(req.query.page);
+  const limit = parseInt(req.query.limit);
   Product.find({ status: 1 })
     .sort({ expiredAt: 1 })
     .exec((error, products) => {
       if (error) return res.status(400).json({ error });
       if (products) {
         total = products.length;
-        return res.status(200).json({ total, products });
+        const results = paginationData(products, page, limit);
+        return res.status(200).json({ total, results });
       }
     });
 };
