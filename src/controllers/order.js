@@ -42,10 +42,9 @@ exports.createOrder = (req, res) => {
 
 exports.getOrderbyUser = (req, res) => {
   const { userId } = req.params;
-  Order.find({ userId: userId }).exec((error, order) => {
+  Order.find({ userId: userId }).populate({path:"productId",select: "_id name"}).exec((error, order) => {
     if (error) return res.status(400).json({ error });
     if (order) {
-      console.log(order.star);
       res.status(200).json({ order });
     }
   });
