@@ -47,6 +47,10 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: 1,
     },
+    auction: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Auction",
+    }],
   },
   { timestamps: true }
 );

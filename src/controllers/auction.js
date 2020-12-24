@@ -2,6 +2,7 @@ const e = require("express");
 const Auction = require("../models/auction");
 const Product = require("../models/product");
 const User = require("../models/user")
+
 exports.createAuction = (req, res) => {
   Product.findOne({ _id: req.body.product }).exec((error, product) => {
     if (error) return res.status(400).json({ error });
@@ -10,11 +11,14 @@ exports.createAuction = (req, res) => {
         user: req.body.userId,
         product: req.body.product,
         price: product.currentPrice + product.stepUp,
+        status: 0,
       });
       auction.save((error, auction) => {
         if (error) return res.status(400).json({ error });
         if (auction) {
           product.currentPrice = auction.price;
+          product.auction = auction._id
+          console.log(auction._id)
           product.save();
           return res.status(201).json({ auction });
         }
@@ -35,4 +39,15 @@ exports.getAuctionbyProduct = (req, res) => {
   } else {
     return res.status(400).json({ error: "Params required" });
   }
+}
+
+
+exports.getAuctionSuccessfullbyUser = (req, res) => {
+  const {productId}= req.params
+  Auction.find({product: productId}).populate({price}).exec((error, auctions)=>{
+    if (error) return res.status(400).json({ error });
+    else{
+      res.status(200).json({ auctions });
+    }
+  })
 }

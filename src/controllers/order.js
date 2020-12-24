@@ -1,7 +1,8 @@
 const Order = require("../models/order");
 const Address = require("../models/address");
 const User = require("../models/user");
-const { body } = require("express-validator");
+
+
 exports.createOrder = (req, res) => {
   const address = new Address({
     mobileNumber: req.body.mobileNumber,
@@ -27,6 +28,7 @@ exports.createOrder = (req, res) => {
             price: req.body.price,
             status: req.body.status,
             addressId: address._id,
+            star: 0,
           });
           order.save((error, order) => {
             if (error) return res.status(400).json({ error });
@@ -81,3 +83,5 @@ exports.rateUser = (req, res) => {
     }
   });
 };
+
+
