@@ -42,11 +42,6 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "Address",
-    }],
-    orders: [{
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "Order"
     }]
   },
   { timestamps: true }

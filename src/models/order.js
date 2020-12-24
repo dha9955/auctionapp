@@ -15,7 +15,7 @@ const orderSchema = new mongoose.Schema({
     type: Number,
   },
   status: {
-    type: String,
+    type: Number,
   },
   addressId: {
     type: mongoose.Schema.Types.ObjectId,
