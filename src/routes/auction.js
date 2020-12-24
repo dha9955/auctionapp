@@ -5,5 +5,5 @@ const { createAuction, getAuctionbyProduct, getAuctionSuccessfullbyUser } = requ
 
 router.post("/auction/create",createAuction);
 router.get("/auction/getauctionbyproduct/:productId", getAuctionbyProduct);
-router.get("/auction/getauctionsuccessfullbyuser/:productId", getAuctionSuccessfullbyUser)
+router.get("/auction/getauctionsuccessfullbyuser/:userId", getAuctionSuccessfullbyUser)
 module.exports = router;
