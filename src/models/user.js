@@ -43,6 +43,11 @@ const userSchema = new mongoose.Schema(
       required: true,
       ref: "Address",
     }],
+    orders: [{
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Order"
+    }]
   },
   { timestamps: true }
 );

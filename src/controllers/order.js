@@ -1,7 +1,7 @@
 const Order = require("../models/order");
 const Address = require("../models/address");
 const User = require("../models/user");
-
+const Product = require("../models/product");
 
 exports.createOrder = (req, res) => {
   const address = new Address({
@@ -20,22 +20,30 @@ exports.createOrder = (req, res) => {
       User.findOne({ _id: req.body.userId }).exec((error, user) => {
         if (error) return res.status(400).json({ error });
         else {
-          user.address = address._id;
+          user.address.push(address._id);
           user.save();
-          const order = new Order({
-            userId: req.body.userId,
-            productId: req.body.productId,
-            price: req.body.price,
-            status: req.body.status,
-            addressId: address._id,
-            star: 0,
-          });
-          order.save((error, order) => {
-            if (error) return res.status(400).json({ error });
-            if (order) {
-              res.status(201).json({ address, order });
+          Product.findOne({ _id: req.body.productId }).exec(
+            (error, product) => {
+              if (error) return res.status(400).json({ error });
+              else {
+                const order = new Order({
+                  userId: req.body.userId,
+                  productId: req.body.productId,
+                  price: req.body.price,
+                  status: req.body.status,
+                  addressId: address._id,
+                  star: 0,
+                  seller: product.owner.userId,
+                });
+                order.save((error, order) => {
+                  if (error) return res.status(400).json({ error });
+                  if (order) {
+                    res.status(201).json({ address, order });
+                  }
+                });
+              }
             }
-          });
+          );
         }
       });
     }
@@ -44,12 +52,14 @@ exports.createOrder = (req, res) => {
 
 exports.getOrderbyUser = (req, res) => {
   const { userId } = req.params;
-  Order.find({ userId: userId }).populate({path:"productId",select: "_id name"}).exec((error, order) => {
-    if (error) return res.status(400).json({ error });
-    if (order) {
-      res.status(200).json({ order });
-    }
-  });
+  Order.find({ userId: userId })
+    .populate({ path: "productId", select: "_id name" })
+    .exec((error, order) => {
+      if (error) return res.status(400).json({ error });
+      if (order) {
+        res.status(200).json({ order });
+      }
+    });
 };
 
 exports.rateUser = (req, res) => {
@@ -57,11 +67,10 @@ exports.rateUser = (req, res) => {
     if (error) return res.status(400).json({ error });
     if (order) {
       order.star = req.body.star;
-      order.comment = req.body.comment;
       order.save();
       let count = 0;
       let total = 0;
-      Order.find({ userId: order.userId }).exec((error, orders) => {
+      Order.find({ seller: order.seller }).exec((error, orders) => {
         if (error) return res.status(400).json({ error });
         else {
           for (let ord of orders) {
@@ -70,7 +79,7 @@ exports.rateUser = (req, res) => {
               total = total + ord.star;
             }
           }
-          User.findOne({ _id: order.userId }).exec((error, user) => {
+          User.findOne({ _id: order.seller }).exec((error, user) => {
             if (error) return res.status(400).json({ error });
             if (user) {
               user.rating = total / count;
@@ -83,5 +92,3 @@ exports.rateUser = (req, res) => {
     }
   });
 };
-
-

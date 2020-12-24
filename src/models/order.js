@@ -22,12 +22,13 @@ const orderSchema = new mongoose.Schema({
     required: true,
     ref: "Address",
   },
-  star: {
+  star:{
     type: Number,
-    default:0,
   },
-  comment:{
-    type: String,
+  seller:{
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "User",
   }
 });
 

@@ -17,8 +17,7 @@ exports.createAuction = (req, res) => {
         if (error) return res.status(400).json({ error });
         if (auction) {
           product.currentPrice = auction.price;
-          product.auction = auction._id
-          console.log(auction._id)
+          product.auction.push(auction._id)
           product.save();
           return res.status(201).json({ auction });
         }
@@ -43,10 +42,10 @@ exports.getAuctionbyProduct = (req, res) => {
 
 
 exports.getAuctionSuccessfullbyUser = (req, res) => {
-  const {productId}= req.params
-  Auction.find({product: productId}).populate({price}).exec((error, auctions)=>{
+  const {userId} = req.params;
+  Auction.find({user: userId, status:1}).populate({path:"product", select:"_id name"}).exec((error, auctions)=>{
     if (error) return res.status(400).json({ error });
-    else{
+    else {
       res.status(200).json({ auctions });
     }
   })

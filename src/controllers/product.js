@@ -1,6 +1,7 @@
 const Product = require("../models/product");
 const moment = require("moment");
-const {paginationData} = require("../common-middleware/pagination")
+const {paginationData} = require("../common-middleware/pagination");
+const Auction = require("../models/auction");
 
 exports.createProduct = (req, res) => {
   const {
@@ -146,7 +147,6 @@ exports.getAllProducts = (req, res) => {
     if (error) {
       return res.status(400).json({ error });
     } else {
-
       res.status(200).json({ products });
     }
   });
@@ -158,7 +158,20 @@ exports.checkExpiredProducts = (req, res) => {
       if (error) {
         return res.status(400).json({ error });
       } else {
-        res.status(201).json({  message: "Updated Successfully..!" });
+        Product.find({status:0}).exec((error, products)=>{
+          if (error) {
+            return res.status(400).json({ error });
+          }else{
+            for(let pro of products){
+              Auction.updateOne({product:pro._id,price:pro.currentPrice},{status:1}).exec((error, auction)=>{
+                if (error) {
+                  return res.status(400).json({ error });
+                }
+              })
+            }
+          }
+        })
+        res.status(200).json({ message:"updated...." });
       }
     }
   );
