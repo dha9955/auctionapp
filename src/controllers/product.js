@@ -143,11 +143,15 @@ exports.sortDealInDay = (req, res) => {
 // };
 
 exports.getAllProducts = (req, res) => {
+  const page = parseInt(req.query.page);
+  const limit = parseInt(req.query.limit);
   Product.find({ status: 1 }).exec((error, products) => {
     if (error) {
       return res.status(400).json({ error });
     } else {
-      res.status(200).json({ products });
+      total = products.length;
+      const results = paginationData(products, page, limit);
+      res.status(200).json({ total, results });
     }
   });
 };

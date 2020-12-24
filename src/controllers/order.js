@@ -2,6 +2,8 @@ const Order = require("../models/order");
 const Address = require("../models/address");
 const User = require("../models/user");
 const Product = require("../models/product");
+const {paginationData} = require("../common-middleware/pagination");
+
 
 exports.createOrder = (req, res) => {
   const address = new Address({
@@ -89,6 +91,22 @@ exports.rateUser = (req, res) => {
           });
         }
       });
+    }
+  });
+};
+
+
+
+exports.getAllOrders = (req, res) => {
+  const page = parseInt(req.query.page);
+  const limit = parseInt(req.query.limit);
+  Order.find({}).exec((error, orders) => {
+    if (error) {
+      return res.status(400).json({ error });
+    } else {
+      total = orders.length;
+      const results = paginationData(orders, page, limit);
+      return res.status(200).json({ total, results });
     }
   });
 };
