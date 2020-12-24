@@ -33,7 +33,7 @@ exports.createOrder = (req, res) => {
                   status: req.body.status,
                   addressId: address._id,
                   star: 0,
-                  seller: product.owner.userId,
+                  seller: product.owner,
                 });
                 order.save((error, order) => {
                   if (error) return res.status(400).json({ error });
