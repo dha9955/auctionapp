@@ -2,6 +2,7 @@ const Product = require("../models/product");
 const moment = require("moment");
 const {paginationData} = require("../common-middleware/pagination");
 const Auction = require("../models/auction");
+const product = require("../models/product");
 
 exports.createProduct = (req, res) => {
   const {
@@ -204,5 +205,16 @@ exports.deleteProductbyId = (req, res) => {
     if(product){
       res.status(201).json({ message: "Product Removed" });
     }
+  })
+}
+
+exports.getProductbyUser = (req, res) =>{
+  const {userId} = req.params
+  Product.find({owner:userId}).exec((error, products)=>{
+    if (error) return res.status(400).json({ error });
+      if (products) {
+        total = products.length;
+        res.status(200).json({ total, products });
+      }
   })
 }

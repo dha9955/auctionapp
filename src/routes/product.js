@@ -8,7 +8,8 @@ const {
   sortProductByExpiredAt,
   checkExpiredProducts,
   getProductByBrand,
-  deleteProductbyId
+  deleteProductbyId,
+  getProductbyUser
 } = require("../controllers/product");
 const router = express.Router();
 
@@ -23,5 +24,5 @@ router.get("/product/getproductbyid/:productId", getProductById);
 router.get("/product/getproductbycategory/:category",getProductByCategory)
 router.get("/product/sortproductbyexpiredat", sortProductByExpiredAt)
 router.get("/product/getproductbybrand/:brand", getProductByBrand)
-
+router.get("/product/getproductbyuser/:userId", getProductbyUser)
 module.exports = router;

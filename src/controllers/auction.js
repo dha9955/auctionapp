@@ -50,3 +50,13 @@ exports.getAuctionSuccessfullbyUser = (req, res) => {
     }
   })
 }
+
+exports.getAuctionbyUser = (req, res) => {
+  const {userId} = req.params
+  Auction.find({user:userId}).populate({path:"product", select:"_id name currentPrice expiredAt"}).exec((error, auctions)=>{
+    if (error) return res.status(400).json({ error });
+    else {
+      res.status(200).json({ auctions });
+    }
+  })
+}
