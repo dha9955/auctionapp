@@ -158,7 +158,7 @@ exports.getAllProducts = (req, res) => {
 };
 
 exports.checkExpiredProducts = (req, res) => {
-  Product.updateMany({ expiredAt: { $lt: Date()}}, {status: 0}).exec(
+  Product.updateMany({ expiredAt: { $lt: Date()}}, {status: 2}).exec(
     (error) => {
       if (error) {
         return res.status(400).json({ error });
@@ -216,5 +216,22 @@ exports.getProductbyUser = (req, res) =>{
         total = products.length;
         res.status(200).json({ total, products });
       }
+  })
+}
+
+exports.getProductNotValidated = (req, res) => {
+  Product.find({status:0}).exec((error, products)=>{
+    if (error) return res.status(400).json({ error });
+    else {
+      res.status(200).json({products})
+    }
+  })
+}
+exports.validateProduct = (req,res)=>{
+  Product.updateOne({_id:req.body.productId},{status:1}).exec((error)=>{
+    if (error) return res.status(400).json({ error });
+    else{
+      return res.status(200).json({message: "Product was validated...."})
+    } 
   })
 }

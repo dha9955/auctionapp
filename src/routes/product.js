@@ -9,7 +9,9 @@ const {
   checkExpiredProducts,
   getProductByBrand,
   deleteProductbyId,
-  getProductbyUser
+  getProductbyUser,
+  validateProduct,
+  getProductNotValidated
 } = require("../controllers/product");
 const router = express.Router();
 
@@ -25,4 +27,6 @@ router.get("/product/getproductbycategory/:category",getProductByCategory)
 router.get("/product/sortproductbyexpiredat", sortProductByExpiredAt)
 router.get("/product/getproductbybrand/:brand", getProductByBrand)
 router.get("/product/getproductbyuser/:userId", getProductbyUser)
+router.patch("/product/validateproduct", validateProduct)
+router.get("/product/getproductnotvalidated", getProductNotValidated);
 module.exports = router;

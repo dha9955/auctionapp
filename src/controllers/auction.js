@@ -67,6 +67,7 @@ exports.getAuctionbyUser = (req, res) => {
       }
     })
     .then(async() => {
+      //arr=[1,1,1,1,1,1,2,3] = [1,2,3]
       let pr = products.filter(
         (item, index) => products.indexOf(item) === index
       );

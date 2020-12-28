@@ -45,7 +45,7 @@ const productSchema = new mongoose.Schema(
     },
     status: {
       type: Number,
-      default: 1,
+      default: 0,
     },
     auction: [{
       type: mongoose.Schema.Types.ObjectId,
