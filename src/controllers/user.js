@@ -45,11 +45,17 @@ exports.getAllUsers = (req, res) => {
 };
 
 exports.lockUser = (req, res) =>{
-  User.updateOne({_id:req.body.userId},{role:"lock"}).exec((error)=>{
+  User.findOne({_id:req.body.userId}).exec((error, user)=>{
     if (error) {
       return res.status(400).json({ error });
-    }else{
-      return res.status(200).json({ message:"user was locked ..." });
+    } else {
+      if(user.role != "locked"){
+        user.role = "locked"
+      }else {
+        user.role = "user"
+      }
+      user.save()
+      return res.status(201).json({ user });
     }
   })
 }
