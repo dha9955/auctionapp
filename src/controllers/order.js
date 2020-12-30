@@ -2,8 +2,7 @@ const Order = require("../models/order");
 const Address = require("../models/address");
 const User = require("../models/user");
 const Product = require("../models/product");
-const {paginationData} = require("../common-middleware/pagination");
-
+const { paginationData } = require("../common-middleware/pagination");
 
 exports.createOrder = (req, res) => {
   const address = new Address({
@@ -23,29 +22,33 @@ exports.createOrder = (req, res) => {
         if (error) return res.status(400).json({ error });
         else {
           user.address.push(address._id);
-          user.save();
-          Product.findOne({ _id: req.body.productId }).exec(
-            (error, product) => {
-              if (error) return res.status(400).json({ error });
-              else {
-                const order = new Order({
-                  userId: req.body.userId,
-                  productId: req.body.productId,
-                  price: req.body.price,
-                  status: req.body.status,
-                  addressId: address._id,
-                  star: 0,
-                  seller: product.owner,
-                });
-                order.save((error, order) => {
-                  if (error) return res.status(400).json({ error });
-                  if (order) {
-                    res.status(201).json({ address, order });
-                  }
-                });
+          user.save().then(() => {
+            Product.findOne({ _id: req.body.productId }).exec(
+              (error, product) => {
+                if (error) return res.status(400).json({ error });
+                else {
+                  const order = new Order({
+                    userId: req.body.userId,
+                    productId: req.body.productId,
+                    price: req.body.price,
+                    status: req.body.status,
+                    addressId: address._id,
+                    star: 0,
+                    seller: product.owner,
+                  });
+                  product.status = 4;
+                  product.save().then(() => {
+                    order.save((error, order) => {
+                      if (error) return res.status(400).json({ error });
+                      if (order) {
+                        res.status(201).json({ address, order });
+                      }
+                    });
+                  });
+                }
               }
-            }
-          );
+            );
+          });
         }
       });
     }
@@ -72,7 +75,7 @@ exports.rateUser = (req, res) => {
       order.save();
       let count = 0;
       let total = 0;
-      Order.find({ seller: order.seller }).exec((error, orders) => {
+      Order.find({ seller: order.seller, status: 1 }).exec((error, orders) => {
         if (error) return res.status(400).json({ error });
         else {
           for (let ord of orders) {
@@ -95,8 +98,6 @@ exports.rateUser = (req, res) => {
   });
 };
 
-
-
 exports.getAllOrders = (req, res) => {
   const page = parseInt(req.query.page);
   const limit = parseInt(req.query.limit);
@@ -109,5 +110,19 @@ exports.getAllOrders = (req, res) => {
       return res.status(200).json({ total, results });
     }
   });
+};
+
+exports.checkedout = (req, res)=> {
+  Order.updateOne({_id:req.body.orderId},{status:1, CheckoutTime: new Date()}).exec((error)=>{
+    if (error) {
+      return res.status(400).json({ error });
+    }else{
+      return res.status(200).json({message:"Successful...."})
+    }
+  })
+}
+
+exports.getRevenuebyMonth = (req, res) => {
+
 };
 

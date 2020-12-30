@@ -33,7 +33,7 @@ exports.getUserbyToken = (req, res) => {
 exports.getAllUsers = (req, res) => {
   const page = parseInt(req.query.page);
   const limit = parseInt(req.query.limit);
-  User.find({role: "user"}).exec((error, users) => {
+  User.find({role: "user",role:"locked"}).exec((error, users) => {
     if (error) {
       return res.status(400).json({ error });
     } else {
