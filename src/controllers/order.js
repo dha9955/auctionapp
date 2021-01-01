@@ -3,6 +3,7 @@ const Address = require("../models/address");
 const User = require("../models/user");
 const Product = require("../models/product");
 const { paginationData } = require("../common-middleware/pagination");
+const order = require("../models/order");
 
 exports.createOrder = (req, res) => {
   const address = new Address({
@@ -41,7 +42,12 @@ exports.createOrder = (req, res) => {
                     order.save((error, order) => {
                       if (error) return res.status(400).json({ error });
                       if (order) {
-                        res.status(201).json({ address, order });
+                        if(order.status = 1){
+                          order.CheckoutTime = new Date();
+                        }
+                        order.save().then(()=>{
+                          return res.status(201).json({order});
+                        })
                       }
                     });
                   });
@@ -123,6 +129,14 @@ exports.checkedout = (req, res)=> {
 }
 
 exports.getRevenuebyMonth = (req, res) => {
-
+  Order.find({status:1}).exec((error, orders)=>{
+    if(error){
+      return res.status(400).json({ error });
+    }else{
+      for(let ord of orders) {
+        3
+      }
+    }
+  })
 };
 

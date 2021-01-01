@@ -46,7 +46,7 @@ exports.signin = (req, res) => {
           process.env.JWT_SECRET,
           { expiresIn: "1d" }
         );
-        const { _id, firstName, lastName, email, role, fullName } = user;
+        const { _id, firstName, lastName, email, role, fullName, contactNumber } = user;
         res.status(200).json({
           token,
           user: { _id, firstName, lastName, email, role, fullName, contactNumber },
