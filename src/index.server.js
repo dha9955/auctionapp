@@ -4,6 +4,9 @@ const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser")
+const socket = require('socket.io')
+var http = require('http').createServer(app)
+http.listen(2001);
 //routes
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin/auth");
@@ -49,3 +52,18 @@ app.use("/api", orderRoutes);
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
 });
+
+var io = socket(http)
+
+io.on('connection', socket =>{
+  console.log(socket.id)
+  socket.on("join bidding",(data)=>{
+    socket.join(data.productId)
+    console.log(data)
+    console.log(socket.id)
+  })
+
+  socket.on("auction", (data)=>{
+    socket.to(data.room).emit("complete auction")
+  })
+})
