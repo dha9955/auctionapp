@@ -48,11 +48,6 @@ app.use("/api", orderRoutes);
 
 
 
-
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
-});
-
 var io = socket(http)
 
 io.on('connection', socket =>{
@@ -67,3 +62,8 @@ io.on('connection', socket =>{
     socket.to(data.room).emit("complete auction")
   })
 })
+
+
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on port ${process.env.PORT}`);
+});
