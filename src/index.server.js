@@ -8,6 +8,9 @@ const socket = require("socket.io");
 var http = require("http").createServer(app);
 var io = socket(http);
 http.listen(2001);
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on port ${process.env.PORT}`);
+});
 
 
 
@@ -65,6 +68,4 @@ io.on("connection", (socket) => {
   });
 });
 
-// app.listen(process.env.PORT, () => {
-//   console.log(`Server is running on port ${process.env.PORT}`);
-// });
+
