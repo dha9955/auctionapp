@@ -4,13 +4,14 @@ const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const socket = require("socket.io");
+
 var http = require("http").createServer(app);
-var io = socket(http);
+const io = require("socket.io").listen(http)
 http.listen(2001);
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
-});
+
+// app.listen(process.env.PORT, () => {
+//   console.log(`Server is running on port ${process.env.PORT}`);
+// });
 
 
 
