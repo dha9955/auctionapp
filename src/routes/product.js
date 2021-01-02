@@ -11,7 +11,8 @@ const {
   deleteProductbyId,
   getProductbyUser,
   validateProduct,
-  getProductNotValidated
+  getProductNotValidated,
+  searchProduct
 } = require("../controllers/product");
 const router = express.Router();
 
@@ -29,4 +30,5 @@ router.get("/product/getproductbybrand/:brand", getProductByBrand)
 router.get("/product/getproductbyuser/:userId", getProductbyUser)
 router.patch("/product/validateproduct", validateProduct)
 router.get("/product/getproductnotvalidated", getProductNotValidated);
+router.get("/product/searchproduct",searchProduct);
 module.exports = router;

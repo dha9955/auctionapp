@@ -3,6 +3,7 @@ const Auction = require("../models/auction");
 const Product = require("../models/product");
 const User = require("../models/user");
 
+
 exports.createAuction = (req, res) => {
   Product.findOne({ _id: req.body.product }).exec((error, product) => {
     if (error) return res.status(400).json({ error });

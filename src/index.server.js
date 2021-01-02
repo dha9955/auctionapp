@@ -3,18 +3,20 @@ const env = require("dotenv");
 const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
-const bodyParser = require("body-parser")
-const socket = require('socket.io')
-var http = require('http').createServer(app)
+const bodyParser = require("body-parser");
+const nodemailer = require("nodemailer");
+const socket = require("socket.io");
+var http = require("http").createServer(app);
 http.listen(2001);
+
 //routes
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin/auth");
-const manageUserRoutes = require("./routes/admin/user")
+const manageUserRoutes = require("./routes/admin/user");
 const productRoutes = require("./routes/product");
 const auctionRoutes = require("./routes/auction");
 const userRoutes = require("./routes/user");
-const ratingRoutes = require("./routes/rating")
+const ratingRoutes = require("./routes/rating");
 const addressRoutes = require("./routes/address");
 const orderRoutes = require("./routes/order");
 //environment variable
@@ -46,23 +48,20 @@ app.use("/api", ratingRoutes);
 app.use("/api", addressRoutes);
 app.use("/api", orderRoutes);
 
+var io = socket(http);
 
+io.on("connection", (socket) => {
+  console.log(socket.id);
+  socket.on("join bidding", (data) => {
+    socket.join(data.productId);
+    console.log(data);
+    console.log(socket.id);
+  });
 
-var io = socket(http)
-
-io.on('connection', socket =>{
-  console.log(socket.id)
-  socket.on("join bidding",(data)=>{
-    socket.join(data.productId)
-    console.log(data)
-    console.log(socket.id)
-  })
-
-  socket.on("auction", (data)=>{
-    socket.to(data.room).emit("complete auction")
-  })
-})
-
+  socket.on("auction", (data) => {
+    socket.to(data.room).emit("complete auction");
+  });
+});
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
