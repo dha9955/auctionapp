@@ -260,7 +260,7 @@ exports.sendmail = (req, res) => {
 
 exports.searchProduct = (req, res) => {
   const searchedField = req.query.name;
-  Product.find({name:{$regex: searchedField, $options: '$i'}}).then(data=>{
+  Product.find({name:{$regex: searchedField, $options: '$i'}, status:1}).then(data=>{
     res.status(200).json({data})
   })
 }

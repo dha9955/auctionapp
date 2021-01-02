@@ -4,9 +4,9 @@ const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const nodemailer = require("nodemailer");
 const socket = require("socket.io");
 var http = require("http").createServer(app);
+var io = socket(http);
 http.listen(2001);
 
 
@@ -50,7 +50,7 @@ app.use("/api", ratingRoutes);
 app.use("/api", addressRoutes);
 app.use("/api", orderRoutes);
 
-var io = socket(http);
+
 
 io.on("connection", (socket) => {
   console.log(socket.id);
@@ -65,6 +65,6 @@ io.on("connection", (socket) => {
   });
 });
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
-});
+// app.listen(process.env.PORT, () => {
+//   console.log(`Server is running on port ${process.env.PORT}`);
+// });

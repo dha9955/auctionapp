@@ -3,7 +3,6 @@ const Address = require("../models/address");
 const User = require("../models/user");
 const Product = require("../models/product");
 const { paginationData } = require("../common-middleware/pagination");
-const order = require("../models/order");
 
 exports.createOrder = (req, res) => {
   const address = new Address({
@@ -42,12 +41,12 @@ exports.createOrder = (req, res) => {
                     order.save((error, order) => {
                       if (error) return res.status(400).json({ error });
                       if (order) {
-                        if(order.status = 1){
+                        if ((order.status = 1)) {
                           order.CheckoutTime = new Date();
                         }
-                        order.save().then(()=>{
-                          return res.status(201).json({order});
-                        })
+                        order.save().then(() => {
+                          return res.status(201).json({ order });
+                        });
                       }
                     });
                   });
@@ -118,25 +117,43 @@ exports.getAllOrders = (req, res) => {
   });
 };
 
-exports.checkedout = (req, res)=> {
-  Order.updateOne({_id:req.body.orderId},{status:1, CheckoutTime: new Date()}).exec((error)=>{
+exports.checkedout = (req, res) => {
+  Order.updateOne(
+    { _id: req.body.orderId },
+    { status: 1, CheckoutTime: new Date() }
+  ).exec((error) => {
     if (error) {
       return res.status(400).json({ error });
-    }else{
-      return res.status(200).json({message:"Successful...."})
+    } else {
+      return res.status(200).json({ message: "Successful...." });
     }
-  })
-}
-
-exports.getRevenuebyMonth = (req, res) => {
-  Order.find({status:1}).exec((error, orders)=>{
-    if(error){
-      return res.status(400).json({ error });
-    }else{
-      for(let ord of orders) {
-        3
-      }
-    }
-  })
+  });
 };
 
+exports.getRevenuebyMonth = (req, res) => {
+  // const {id} = req.params
+  // Order.findOne({_id:id,status:1}).exec((error, orders)=>{
+  //   if(error){
+  //     return res.status(400).json({ error });
+  //   }else{
+  //     var m = orders.CheckoutTime.getMonth() + 1
+  //     res.status(200).json({m})
+  //   }
+  // })
+  const { month } = req.params;
+  Order.find({ status: 1 }).exec((error, orders) => {
+    if (error) {
+      return res.status(400).json({ error });
+    } else {
+      let revenue = 0;
+      for (let ord of orders) {
+        if (ord.CheckoutTime.getMonth() + 1 == month) {
+          console.log(ord.price);
+          revenue = revenue + (ord.price * 10) / 100;
+        }
+      }
+      console.log(revenue);
+      return res.status(200).json({ revenue });
+    }
+  });
+};
