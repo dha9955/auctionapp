@@ -7,18 +7,12 @@ const bodyParser = require("body-parser");
 
 var http = require("http").createServer(app);
 const io = require("socket.io").listen(http)
-http.listen(2000);
+http.listen(2001);
 
-// app.listen(process.env.PORT, () => {
-//   console.log(`Server is running on port ${process.env.PORT}`);
-// });
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on port ${process.env.PORT}`);
+});
 
-app.use(bodyParser.urlencoded({extended : true}))
-app.use(bodyParser.json())
-
-app.get('/',(req,res) => {
-  res.send({qwe : '123'})
-})
 
 
 //routes
