@@ -16,6 +16,10 @@ http.listen(2000);
 app.use(bodyParser.urlencoded({extended : true}))
 app.use(bodyParser.json())
 
+app.get('/',(req,res) => {
+  res.send({qwe : '123'})
+})
+
 
 //routes
 const authRoutes = require("./routes/auth");
