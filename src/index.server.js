@@ -5,9 +5,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
-var http = require("http").createServer(app);
-const io = require("socket.io").listen(http)
-http.listen(2001);
+// var http = require("http").createServer(app);
+// const io = require("socket.io").listen(http)
+// http.listen(2001);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
@@ -56,17 +56,17 @@ app.use("/api", orderRoutes);
 
 
 
-io.on("connection", (socket) => {
-  console.log(socket.id);
-  socket.on("join bidding", (data) => {
-    socket.join(data.productId);
-    console.log(data);
-    console.log(socket.id);
-  });
+// io.on("connection", (socket) => {
+//   console.log(socket.id);
+//   socket.on("join bidding", (data) => {
+//     socket.join(data.productId);
+//     console.log(data);
+//     console.log(socket.id);
+//   });
 
-  socket.on("auction", (data) => {
-    socket.to(data.room).emit("complete auction");
-  });
-});
+//   socket.on("auction", (data) => {
+//     socket.to(data.room).emit("complete auction");
+//   });
+// });
 
 
