@@ -37,6 +37,10 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default:0,
     },
+    authSocialID: {
+      type: String,
+      default: null,
+    },
     contactNumber: { type: String },
     address: [{
       type: mongoose.Schema.Types.ObjectId,

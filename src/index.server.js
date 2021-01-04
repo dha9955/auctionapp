@@ -9,11 +9,6 @@ const bodyParser = require("body-parser");
 // const io = require("socket.io").listen(http)
 // http.listen(2001);
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
-});
-
-
 
 //routes
 const authRoutes = require("./routes/auth");
@@ -55,6 +50,9 @@ app.use("/api", addressRoutes);
 app.use("/api", orderRoutes);
 
 
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on port ${process.env.PORT}`);
+});
 
 // io.on("connection", (socket) => {
 //   console.log(socket.id);

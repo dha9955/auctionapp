@@ -46,7 +46,7 @@ exports.getAuctionbyProduct = (req, res) => {
 exports.getAuctionSuccessfullbyUser = (req, res) => {
   const { userId } = req.params;
   Auction.find({ user: userId, status: 1 })
-    .populate({ path: "product", select: "_id name" })
+    .populate({ path: "product", select: "_id name expiredAt" })
     .exec((error, auctions) => {
       if (error) return res.status(400).json({ error });
       else {

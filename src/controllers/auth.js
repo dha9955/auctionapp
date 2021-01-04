@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const user = require("../models/user");
 
 exports.signup = (req, res) => {
   User.findOne({ username: req.body.username }).exec(async (error, user) => {
@@ -62,9 +63,28 @@ exports.signin = (req, res) => {
   });
 };
 
+exports.signinSocialAccount = (req, res) => {
+  const user = new User({
+    email: req.body.email,
+    authSocialID: req.body.uid,
+    lastName: req.body.displayName
+  })
+  user.save().then(()=>{
+    const token = jwt.sign(
+      {_id:user._id, role: user,role},
+      process.env.JWT_SECRET,
+      {expiresIn: "1d"}
+    )
+    return res.status(201).json({token, user})
+  })
+}
+
+
+
 exports.signout = (req, res) => {
   res.clearCookie("token");
   res.status(200).json({
     message: "Signout successfully...!",
   });
 };
+

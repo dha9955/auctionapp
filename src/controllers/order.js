@@ -106,7 +106,11 @@ exports.rateUser = (req, res) => {
 exports.getAllOrders = (req, res) => {
   const page = parseInt(req.query.page);
   const limit = parseInt(req.query.limit);
-  Order.find({}).exec((error, orders) => {
+  Order.find()
+  .populate({ path: "productId", select: "_id name" })
+  .populate({ path: "userId", select: "_id username" })
+  .populate({ path: "seller", select: "_id username" })
+  .exec((error, orders) => {
     if (error) {
       return res.status(400).json({ error });
     } else {
@@ -131,15 +135,6 @@ exports.checkedout = (req, res) => {
 };
 
 exports.getRevenuebyMonth = (req, res) => {
-  // const {id} = req.params
-  // Order.findOne({_id:id,status:1}).exec((error, orders)=>{
-  //   if(error){
-  //     return res.status(400).json({ error });
-  //   }else{
-  //     var m = orders.CheckoutTime.getMonth() + 1
-  //     res.status(200).json({m})
-  //   }
-  // })
   const { month } = req.params;
   Order.find({ status: 1 }).exec((error, orders) => {
     if (error) {
