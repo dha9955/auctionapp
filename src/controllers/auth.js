@@ -66,12 +66,14 @@ exports.signin = (req, res) => {
 exports.signinSocialAccount = (req, res) => {
   const user = new User({
     email: req.body.email,
+    username: req.body.uid,
     authSocialID: req.body.uid,
     lastName: req.body.displayName
   })
+  console.log(user)
   user.save().then(()=>{
     const token = jwt.sign(
-      {_id:user._id, role: user,role},
+      {_id:user._id, role: user.role},
       process.env.JWT_SECRET,
       {expiresIn: "1d"}
     )
