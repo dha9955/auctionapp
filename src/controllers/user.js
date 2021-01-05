@@ -60,4 +60,6 @@ exports.lockUser = (req, res) =>{
   })
 }
 
-// exports.
+// exports.updateUser = (req, res) =>{
+//   const {}
+// }
