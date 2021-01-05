@@ -20,7 +20,6 @@ exports.getUserbyId = (req, res) => {
 exports.getUserbyToken = (req, res) => {
   const { token } = req.params;
   const decoded = jwt.decode(token, { complete: true });
-  console.log(decoded.payload._id);
   User.findOne({ _id: decoded.payload._id }).exec((error, user) => {
     if (error) {
       return res.status(400).json({ error });

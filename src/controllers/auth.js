@@ -104,7 +104,7 @@ exports.signinSocialAccount = (req, res) => {
         email: req.body.email,
         authSocialID: req.body.uid,
         lastName: req.body.displayName,
-        username: req.body.email
+        username: req.body.uid
       });
       console.log(user);
       user.save().then(() => {
