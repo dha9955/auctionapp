@@ -1,7 +1,6 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
-const {paginationData} = require("../common-middleware/pagination");
-
+const { paginationData } = require("../common-middleware/pagination");
 
 exports.getUserbyId = (req, res) => {
   const { userId } = req.params;
@@ -32,7 +31,7 @@ exports.getUserbyToken = (req, res) => {
 exports.getAllUsers = (req, res) => {
   const page = parseInt(req.query.page);
   const limit = parseInt(req.query.limit);
-  User.find({role: {$in:["user","locked"]}}).exec((error, users) => {
+  User.find({ role: { $in: ["user", "locked"] } }).exec((error, users) => {
     if (error) {
       return res.status(400).json({ error });
     } else {
@@ -43,39 +42,40 @@ exports.getAllUsers = (req, res) => {
   });
 };
 
-exports.lockUser = (req, res) =>{
-  User.findOne({_id:req.body.userId}).exec((error, user)=>{
+exports.lockUser = (req, res) => {
+  User.findOne({ _id: req.body.userId }).exec((error, user) => {
     if (error) {
       return res.status(400).json({ error });
     } else {
-      if(user.role != "locked"){
-        user.role = "locked"
-      }else {
-        user.role = "user"
+      if (user.role != "locked") {
+        user.role = "locked";
+      } else {
+        user.role = "user";
       }
-      user.save()
+      user.save();
       return res.status(201).json({ user });
     }
-  })
-}
+  });
+};
 
-exports.updateUser = (req, res) =>{
-  User.findOne({_id: req.body.userId}).exec((error,user)=>{
+exports.updateUser = (req, res) => {
+  User.findOne({ _id: req.body.userId }).exec((error, user) => {
     if (error) {
       return res.status(400).json({ error });
-    } if (user){
-      if(req.body.firstName){
+    }
+    if (user) {
+      if (req.body.firstName) {
         user.firstName = req.body.firstName;
-      } if (req.body.lastName){
+      }
+      if (req.body.lastName) {
         user.lastName = req.body.lastName;
-      } if ( req.body.email){
-        user.email = req.body.email;
-      } if (req.body.contactNumber){
+      }
+      if (req.body.contactNumber) {
         user.contactNumber = req.body.contactNumber;
       }
-      user.save().then(()=>{
-        return res.status(200).json({user})
-      })
+      user.save().then(() => {
+        return res.status(200).json({ user });
+      });
     }
-  })
-}
+  });
+};
