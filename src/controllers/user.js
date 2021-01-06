@@ -59,6 +59,23 @@ exports.lockUser = (req, res) =>{
   })
 }
 
-// exports.updateUser = (req, res) =>{
-//   const {}
-// }
+exports.updateUser = (req, res) =>{
+  User.findOne({_id: req.body.userId}).exec((error,user)=>{
+    if (error) {
+      return res.status(400).json({ error });
+    } if (user){
+      if(req.body.firstName){
+        user.firstName = req.body.firstName;
+      } if (req.body.lastName){
+        user.lastName = req.body.lastName;
+      } if ( req.body.email){
+        user.email = req.body.email;
+      } if (req.body.contactNumber){
+        user.contactNumber = req.body.contactNumber;
+      }
+      user.save().then(()=>{
+        return res.status(200).json({user})
+      })
+    }
+  })
+}

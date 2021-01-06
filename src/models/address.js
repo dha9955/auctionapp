@@ -11,11 +11,6 @@ const addressSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  pinCode: {
-    type: String,
-    required: true,
-    trim: true,
-  },
   detail: {
     type: String,
     required: true,
