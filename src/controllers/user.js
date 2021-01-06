@@ -59,23 +59,31 @@ exports.lockUser = (req, res) => {
 };
 
 exports.updateUser = (req, res) => {
-  User.findOne({ _id: req.body.userId }).exec((error, user) => {
+  User.findOne({ _id: req.body.userId }).exec(async (error, user) => {
     if (error) {
       return res.status(400).json({ error });
     }
     if (user) {
-      if (req.body.firstName) {
-        user.firstName = req.body.firstName;
-      }
-      if (req.body.lastName) {
-        user.lastName = req.body.lastName;
-      }
-      if (req.body.contactNumber) {
-        user.contactNumber = req.body.contactNumber;
-      }
-      user.save().then(() => {
-        return res.status(200).json({ user });
-      });
+      if (req.body.password) {
+        const isPassword = await user.authenticate(req.body.password);
+        if (isPassword) {
+          const hash_password = await bcrypt.hash(req.body.password, 10);
+          user.hash_password = hash_password
+          if (req.body.firstName) {
+            user.firstName = req.body.firstName;
+          }
+          if (req.body.lastName) {
+            user.lastName = req.body.lastName;
+          }
+          if (req.body.contactNumber) {
+            user.contactNumber = req.body.contactNumber;
+          }
+          user.save().then(() => {
+            return res.status(200).json({ user });
+          });
+        } else
+        return res.status(200).json({message: "Your password is not correct!!!"})
+      } 
     }
   });
 };

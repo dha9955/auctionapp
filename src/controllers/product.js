@@ -6,6 +6,7 @@ const product = require("../models/product");
 const nodemailer = require("nodemailer");
 const User = require("../models/user");
 const user = require("../models/user");
+const auction = require("../models/auction");
 
 exports.createProduct = (req, res) => {
   const {
@@ -113,6 +114,8 @@ exports.getAllProducts = (req, res) => {
   });
 };
 
+// status = 0 chua duyet, status = 1 dang ban, status = 2 het han, status = 3 dau gia thanh cong, status = 4 la da duoc thanh toan 
+// status auction = 1 => dau gia thanh cong
 exports.checkExpiredProducts = (req, res) => {
   let transporter = nodemailer.createTransport({
     service: "gmail",
@@ -121,33 +124,34 @@ exports.checkExpiredProducts = (req, res) => {
       pass: "1700561583561Mo",
     },
   });
-  Product.updateMany({ expiredAt: { $lt: Date() } }, { status: 2 }).exec(
-    (error) => {
-      if (error) {
-        return res.status(400).json({ error });
-      } else {
-        Product.find({ status: 2 }).exec((error, products) => {
-          if (error) {
-            return res.status(400).json({ error });
-          } else {
-            for (let pro of products) {
-              Auction.findOne({
-                product: pro._id,
-                price: pro.currentPrice,
-              }).exec((error, auction) => {
-                if (error) {
-                  return res.status(400).json({ error });
-                } else if(auction) {
-                  console.log(auction)
-                  auction.status = 1;
-                  auction.save().then(() => {
-                    User.findOne({ _id: auction.user }).exec(
-                      async (error, user) => {
-                        if (error) {
-                          return res.status(400).json({ error });
-                        } else {
+  Product.find({ expiredAt: { $lt: Date() }, status: 1 }).exec(
+    (error, products) => {
+      if (error) return res.status(400).json({ error });
+      // if(products == []) return res.status(200).json({message:"all products are checked and updated"})
+      if (products) {
+        if (products.length < 1)
+          return res
+            .status(200)
+            .json({
+              message: "all products are checked. No product expired anymore",
+            });
+        else {
+          for (let pro of products) {
+            if (pro.auction) {
+              pro.status = 3;
+              pro.save().then(() => {
+                Auction.findOne({
+                  product: pro._id,
+                  price: pro.currentPrice,
+                }).exec((error, auction) => {
+                  if (error) return res.status(400).json({ error });
+                  if (auction) {
+                    auction.status = 1;
+                    auction.save().then(() => {
+                      User.findOne({ _id: auction.user }).exec(
+                        async (error, user) => {
+                          if (error) return res.status(400).json({ error });
                           if (user.email) {
-                            console.log(user.email);
                             const msg = {
                               from: "anhdh6666@gmail.com",
                               to: `${user.email}`,
@@ -156,18 +160,26 @@ exports.checkExpiredProducts = (req, res) => {
                                 "Congratulations!!! Your auction is successful. Please check & confirm it. Thank you!!!",
                             };
                             const info = await transporter.sendMail(msg);
-                            console.log("Message sent: %s", info.messageId);
+                            return res.status(200).json({
+                              message: "product is auction successful !!!",
+                            });
                           }
                         }
-                      }
-                    );
-                  });
-                }
+                      );
+                    });
+                  }
+                });
+              });
+            } else {
+              pro.status = 2;
+              pro.save().then(() => {
+                return res
+                  .status(200)
+                  .json({ message: "product is expired !!!" });
               });
             }
           }
-        });
-        res.status(200).json({ message: "updated...." });
+        }
       }
     }
   );
@@ -260,7 +272,11 @@ exports.sendmail = (req, res) => {
 
 exports.searchProduct = (req, res) => {
   const searchedField = req.query.name;
-  Product.find({name:{$regex: searchedField, $options: '$i'}, status:1}).then(data=>{
-    res.status(200).json({data})
-  })
-}
+  Product.find({
+    name: { $regex: searchedField, $options: "$i" },
+    status: 1,
+  }).then((data) => {
+    res.status(200).json({ data });
+  });
+};
+

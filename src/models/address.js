@@ -18,11 +18,6 @@ const addressSchema = new mongoose.Schema({
     min: 10,
     max: 100,
   },
-  district: {
-    type: String,
-    required: true,
-    trim: true,
-  },
   city: {
     type: String,
     required: true,
@@ -39,5 +34,5 @@ const addressSchema = new mongoose.Schema({
   },
 });
 
-
+//phone - address
 module.exports = mongoose.model("Address", addressSchema);
