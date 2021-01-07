@@ -38,7 +38,7 @@ exports.createOrder = (req, res) => {
                     addressId: address._id,
                     star: 0,
                     seller: product.owner,
-                    status2: req.body.status2,
+                    status2: 0;
                   });
                   product.status = 4;
                   product.save().then(() => {
