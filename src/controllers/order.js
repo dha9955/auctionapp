@@ -289,7 +289,7 @@ exports.createInvoice = async (req, res) => {
     attachments: [
       {
         filename: "invoice.pdf",
-        path: __dirname + "../../../invoice.pdf",
+        path: __dirname + "/app/invoice.pdf",
       },
     ],
   };
