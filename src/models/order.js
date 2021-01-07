@@ -34,6 +34,9 @@ const orderSchema = new mongoose.Schema(
     CheckoutTime: {
       type: Date,
     },
+    status2: {
+      type: Number,
+    }
   },
   { timestamps: true }
 );
