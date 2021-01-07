@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const { paginationData } = require("../common-middleware/pagination");
-
+const bcrypt = require("bcrypt")
 exports.getUserbyId = (req, res) => {
   const { userId } = req.params;
   if (userId) {
@@ -64,26 +64,28 @@ exports.updateUser = (req, res) => {
       return res.status(400).json({ error });
     }
     if (user) {
-      if (req.body.password) {
-        const isPassword = await user.authenticate(req.body.password);
-        if (isPassword) {
-          const hash_password = await bcrypt.hash(req.body.password, 10);
-          user.hash_password = hash_password
-          if (req.body.firstName) {
-            user.firstName = req.body.firstName;
-          }
-          if (req.body.lastName) {
-            user.lastName = req.body.lastName;
-          }
-          if (req.body.contactNumber) {
-            user.contactNumber = req.body.contactNumber;
-          }
-          user.save().then(() => {
-            return res.status(200).json({ user });
-          });
-        } else
-        return res.status(200).json({message: "Your password is not correct!!!"})
-      } 
+      if(!user.authSocialID){
+        if (req.body.oldPassword) {
+          const isPassword = await user.authenticate(req.body.oldPassword);
+          if (isPassword) {
+            const hash_password = await bcrypt.hash(req.body.newPassword, 10);
+            user.hash_password = hash_password
+            if (req.body.firstName) {
+              user.firstName = req.body.firstName;
+            }
+            if (req.body.lastName) {
+              user.lastName = req.body.lastName;
+            }
+            if (req.body.contactNumber) {
+              user.contactNumber = req.body.contactNumber;
+            }
+            user.save().then(() => {
+              return res.status(200).json({ user });
+            });
+          } else
+          return res.status(200).json({message: "Your password is not correct!!!"})
+        }
+      } else return res.status(200).json({message:"Your account is social account. You can't change password!!!"})
     }
   });
 };
