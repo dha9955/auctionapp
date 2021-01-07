@@ -303,7 +303,7 @@ exports.updateOrder = (req, res) =>{
     if(error) return res.status(400).json({ error });
     if(order){
       console.log(order)
-      order.status2 = 1;
+      order.status2 = 2;
       order.save().then(()=>{
         res.status(200).json({message:"Customer was received product!!"})
       })
