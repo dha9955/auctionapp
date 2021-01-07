@@ -289,10 +289,26 @@ exports.createInvoice = async (req, res) => {
     attachments: [
       {
         filename: "invoice.pdf",
-        path: __dirname + "/app/invoice.pdf",
+        path: __dirname + "/invoice.pdf",
       },
     ],
   };
   const info = await transporter.sendMail(msg);
   return res.status(200).json({ message: "successful..." });
 };
+
+// update status order
+exports.updateOrder = (req, res) =>{
+  Order.findOne({_id:req.body.orderId}).exec((error, order)=>{
+    if(error) return res.status(400).json({ error });
+    if(order){
+      console.log(order)
+      order.status2 = 1;
+      order.save().then(()=>{
+        res.status(200).json({message:"Customer was received product!!"})
+      })
+    } else{
+      res.status(400).json({message:"Can't find the order!!!"})
+    }
+  })
+}
