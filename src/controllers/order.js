@@ -29,6 +29,7 @@ exports.createOrder = (req, res) => {
               (error, product) => {
                 if (error) return res.status(400).json({ error });
                 else {
+                  console.log(product);
                   const order = new Order({
                     userId: req.body.userId,
                     productId: req.body.productId,
@@ -47,7 +48,7 @@ exports.createOrder = (req, res) => {
                           order.CheckoutTime = new Date();
                         }
                         order.save().then(() => {
-                          return res.status(201).json({ order });
+                          return res.status(201).json({ address, order });
                         });
                       }
                     });
@@ -136,90 +137,81 @@ exports.checkedout = (req, res) => {
   });
 };
 
-// exports.getRevenuebyMonth = (req, res) => {
-//   Order.find({ status: 1 }).exec((error, orders) => {
-//     if (error) {
-//       return res.status(400).json({ error });
-//     } else {
-//       let revenue = 0;
-//       for (let ord of orders) {
-//         if (
-//           ord.CheckoutTime.getMonth() + 1 == req.body.month &&
-//           ord.CheckoutTime.getYear() == req.body.year
-//         ) {
-//           console.log(ord.price);
-//           revenue = revenue + (ord.price * 10) / 100;
-//         }
-//       }
-//       console.log(revenue);
-//       return res.status(200).json({ revenue });
-//     }
-//   });
-// };
-
-//
 exports.getRevenuebyMonth = (req, res) => {
-  const {year} = req.params
+  const { year } = req.params;
   let data = [];
   Order.find().exec((error, orders) => {
     if (error) return res.status(400).json({ error });
-    if(orders){
-      let m1=0,m2=0, m3=0, m4=0, m5=0, m6=0, m7=0, m8=0,m9=0,m10=0,m11=0,m12=0;
-      for(let ord of orders){
-        if(ord.createdAt.getFullYear() == year){
-          if(ord.createdAt.getMonth()+1 == 1){
-            m1 = m1 + (ord.price*10)/100;
+    if (orders) {
+      let m1 = 0,
+        m2 = 0,
+        m3 = 0,
+        m4 = 0,
+        m5 = 0,
+        m6 = 0,
+        m7 = 0,
+        m8 = 0,
+        m9 = 0,
+        m10 = 0,
+        m11 = 0,
+        m12 = 0;
+      for (let ord of orders) {
+        if (ord.createdAt.getFullYear() == year) {
+          if (ord.createdAt.getMonth() + 1 == 1) {
+            m1 = m1 + (ord.price * 10) / 100;
           }
-          if(ord.createdAt.getMonth()+1 == 2){
-            m2 = m2 + (ord.price*10)/100;
+          if (ord.createdAt.getMonth() + 1 == 2) {
+            m2 = m2 + (ord.price * 10) / 100;
           }
-          if(ord.createdAt.getMonth()+1 == 3){
-            m3 = m3 + (ord.price*10)/100;
+          if (ord.createdAt.getMonth() + 1 == 3) {
+            m3 = m3 + (ord.price * 10) / 100;
           }
-          if(ord.createdAt.getMonth()+1 == 4){
-            m4 = m4 + (ord.price*10)/100;
+          if (ord.createdAt.getMonth() + 1 == 4) {
+            m4 = m4 + (ord.price * 10) / 100;
           }
-          if(ord.createdAt.getMonth()+1 == 5){
-            m5 = m5 + (ord.price*10)/100;
+          if (ord.createdAt.getMonth() + 1 == 5) {
+            m5 = m5 + (ord.price * 10) / 100;
           }
-          if(ord.createdAt.getMonth()+1 == 6){
-            m6 = m6 + (ord.price*10)/100;
+          if (ord.createdAt.getMonth() + 1 == 6) {
+            m6 = m6 + (ord.price * 10) / 100;
           }
-          if(ord.createdAt.getMonth()+1 == 7){
-            m7 = m7 + (ord.price*10)/100;
+          if (ord.createdAt.getMonth() + 1 == 7) {
+            m7 = m7 + (ord.price * 10) / 100;
           }
-          if(ord.createdAt.getMonth()+1 == 8){
-            m8 = m8 + (ord.price*10)/100;
+          if (ord.createdAt.getMonth() + 1 == 8) {
+            m8 = m8 + (ord.price * 10) / 100;
           }
-          if(ord.createdAt.getMonth()+1 == 9){
-            m9= m9 + (ord.price*10)/100;
+          if (ord.createdAt.getMonth() + 1 == 9) {
+            m9 = m9 + (ord.price * 10) / 100;
           }
-          if(ord.createdAt.getMonth()+1 == 10){
-            m10 = m10 + (ord.price*10)/100;
+          if (ord.createdAt.getMonth() + 1 == 10) {
+            m10 = m10 + (ord.price * 10) / 100;
           }
-          if(ord.createdAt.getMonth()+1 == 11){
-            m11 = m11 + (ord.price*10)/100;
+          if (ord.createdAt.getMonth() + 1 == 11) {
+            m11 = m11 + (ord.price * 10) / 100;
           }
-          if(ord.createdAt.getMonth()+1 == 12){
-            m12 = m12 + (ord.price*10)/100;
+          if (ord.createdAt.getMonth() + 1 == 12) {
+            m12 = m12 + (ord.price * 10) / 100;
           }
         }
       }
-      data = [{
-        "month1":m1,
-        "month2":m2,
-        "month3":m3,
-        "month4":m4,
-        "month5":m5,
-        "month6":m6,
-        "month7":m7,
-        "month8":m8,
-        "month9":m9,
-        "month10":m10,
-        "month11":m11,
-        "month12":m12,
-      }]
-      return res.status(200).json({data})
+      data = [
+        {
+          month1: m1,
+          month2: m2,
+          month3: m3,
+          month4: m4,
+          month5: m5,
+          month6: m6,
+          month7: m7,
+          month8: m8,
+          month9: m9,
+          month10: m10,
+          month11: m11,
+          month12: m12,
+        },
+      ];
+      return res.status(200).json({ data });
     }
   });
 };
@@ -233,6 +225,13 @@ exports.createInvoice = async (req, res) => {
       pass: "1700561583561Mo",
     },
   });
+  let order = await Order.findOne({ _id: req.body.orderId })
+    .populate({
+      path: "addressId",
+      select: "_id mobileNumber detail city addressType",
+    })
+    .populate({ path: "userId", select: "_id email firstName lastName" })
+    .populate({ path: "productId", select: "_id name currentPrice" });
   var data = {
     //"documentTitle": "RECEIPT", //Defaults to INVOICE
     currency: "VND",
@@ -255,11 +254,11 @@ exports.createInvoice = async (req, res) => {
     },
     // req.
     client: {
-      company: "Client Corp",
-      address: "Clientstreet 456",
-      zip: "4567 CD",
-      city: "Clientcity",
-      country: "Clientcountry",
+      company: `${order.userId.firstName} ${order.userId.lastName}`,
+      address: `${order.addressId.detail}`,
+      zip: `${order.addressId.city}`,
+      city: `${order.addressId.addressType}`,
+      country: `${order.addressId.mobileNumber}`,
       //"custom1": "custom value 1",
       //"custom2": "custom value 2",
       //"custom3": "custom value 3"
@@ -268,29 +267,24 @@ exports.createInvoice = async (req, res) => {
     invoiceDate: "1-6-2021",
     products: [
       {
-        quantity: "2",
-        description: "Test1",
-        tax: 6,
-        price: 33.87,
-      },
-      {
-        quantity: "4",
-        description: "Test3",
-        tax: 21,
-        price: 10.45,
+        quantity: "1",
+        description: `${order.productId.name}`,
+        tax: 10,
+        price: `${order.productId.currentPrice}`,
       },
     ],
-    bottomNotice: "Kindly pay your invoice within 15 days.",
+    bottomNotice:
+      "You have 3 days to check products and return it if you are not pleasant. Thanks you support our website",
   };
   //Create your invoice! Easy!
   const result = await easyinvoice.createInvoice(data);
   await fs.writeFileSync("invoice.pdf", result.pdf, "base64");
-  const msg = {
+  const msg = await {
     from: "anhdh6666@gmail.com",
-    to: "1607dha@gmail.com",
+    to: `${order.userId.email}`,
     subject: "Your auction is successful",
     text:
-      "Dear Sir, this is your invoice about the product you pay at ak98-k16website. Please check careful and if something was wrong, please contact us about 5 days. One time again, thanks you to support my website",
+      "Dear Sir, this is your invoice about the product you pay at ak98-k16website. Thanks you to support my website",
     attachments: [
       {
         filename: "invoice.pdf",
