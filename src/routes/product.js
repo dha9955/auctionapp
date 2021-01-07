@@ -12,7 +12,8 @@ const {
   getProductbyUser,
   validateProduct,
   getProductNotValidated,
-  searchProduct
+  searchProduct,
+  getProductHistory
 } = require("../controllers/product");
 const router = express.Router();
 
@@ -31,4 +32,5 @@ router.get("/product/getproductbyuser/:userId", getProductbyUser)
 router.patch("/product/validateproduct", validateProduct)
 router.get("/product/getproductnotvalidated", getProductNotValidated);
 router.get("/product/searchproduct",searchProduct);
+router.get("/product/gethistory/:userId",getProductHistory);
 module.exports = router;

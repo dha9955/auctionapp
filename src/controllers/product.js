@@ -280,3 +280,13 @@ exports.searchProduct = (req, res) => {
   });
 };
 
+
+exports.getProductHistory = (req, res) => {
+  const {userId} = req.params;
+  Product.find({owner:userId, status:[2,3]}).exec((error, products)=>{
+    if (error) return res.status(400).json({ error });
+    if(products){
+      res.status(200).json({products})
+    }
+  })
+}

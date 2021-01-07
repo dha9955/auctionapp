@@ -38,21 +38,18 @@ exports.createOrder = (req, res) => {
                     addressId: address._id,
                     star: 0,
                     seller: product.owner,
-                    status2: 0
+                    status2: 0,
                   });
-                  product.status = 4;
-                  product.save().then(() => {
-                    order.save((error, order) => {
-                      if (error) return res.status(400).json({ error });
-                      if (order) {
-                        if ((order.status = 1)) {
-                          order.CheckoutTime = new Date();
-                        }
-                        order.save().then(() => {
-                          return res.status(201).json({ address, order });
-                        });
+                  order.save((error, order) => {
+                    if (error) return res.status(400).json({ error });
+                    if (order) {
+                      if ((order.status = 1)) {
+                        order.CheckoutTime = new Date();
                       }
-                    });
+                      order.save().then(() => {
+                        return res.status(201).json({ address, order });
+                      });
+                    }
                   });
                 }
               }
@@ -298,16 +295,16 @@ exports.createInvoice = async (req, res) => {
 };
 
 // update status order
-exports.updateOrder = (req, res) =>{
-  Order.findOne({_id:req.body.orderId}).exec((error, order)=>{
-    if(error) return res.status(400).json({ error });
-    if(order){
+exports.updateOrder = (req, res) => {
+  Order.findOne({ _id: req.body.orderId }).exec((error, order) => {
+    if (error) return res.status(400).json({ error });
+    if (order) {
       order.status2 = 2;
-      order.save().then(()=>{
-        res.status(200).json({message:"Customer was received product!!"})
-      })
-    } else{
-      res.status(400).json({message:"Can't find the order!!!"})
+      order.save().then(() => {
+        res.status(200).json({ message: "Customer was received product!!" });
+      });
+    } else {
+      res.status(400).json({ message: "Can't find the order!!!" });
     }
-  })
-}
+  });
+};
