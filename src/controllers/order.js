@@ -29,7 +29,6 @@ exports.createOrder = (req, res) => {
               (error, product) => {
                 if (error) return res.status(400).json({ error });
                 else {
-                  console.log(product);
                   const order = new Order({
                     userId: req.body.userId,
                     productId: req.body.productId,
@@ -43,6 +42,8 @@ exports.createOrder = (req, res) => {
                   order.save((error, order) => {
                     if (error) return res.status(400).json({ error });
                     if (order) {
+                      product.status = 3;
+                      product.save();
                       if ((order.status = 1)) {
                         order.CheckoutTime = new Date();
                       }
