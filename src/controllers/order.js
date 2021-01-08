@@ -336,3 +336,14 @@ exports.getRevenuebyDay = (req, res)=>{
     }
   })
 }
+
+// get order by seller
+exports.getOrderbySeller = (req, res)=>{
+  const {userId} = req.params
+  Order.find({seller : userId}).exec((error, orders)=>{
+    if (error) return res.status(400).json({ error });
+    else{
+      return res.status(200).json({orders})
+    }
+  })
+}
