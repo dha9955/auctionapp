@@ -101,5 +101,6 @@ exports.updateUser2 = (req, res) => {
       user.save().then(()=>{
         return res.status(200).json({user})
       })
+    }
   });
 };
