@@ -139,7 +139,7 @@ exports.checkedout = (req, res) => {
 exports.getRevenuebyMonth = (req, res) => {
   const { year } = req.params;
   let data = [];
-  Order.find().exec((error, orders) => {
+  Order.find({}).exec((error, orders) => {
     if (error) return res.status(400).json({ error });
     if (orders) {
       let m1 = 0,
@@ -319,5 +319,20 @@ exports.updateOrder = (req, res) => {
 };
 
 exports.getRevenuebyDay = (req, res)=>{
-  
+  Order.find({}).exec((error, orders)=>{
+    if (error) return res.status(400).json({ error });
+    if(orders){
+      let revenue = 0;
+      for(let ord of orders){
+         if(ord.createdAt.getDate() == req.body.day){
+          if(ord.createdAt.getMonth() + 1 == req.body.month){
+            if(ord.createdAt.getFullYear() == 2021){
+              revenue = revenue + (ord.price * 10) / 100
+            }
+          }
+        }
+      }
+      return res.status(200).json({revenue})
+    }
+  })
 }

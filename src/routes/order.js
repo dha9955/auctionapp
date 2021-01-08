@@ -1,6 +1,6 @@
 const express = require('express');
 const { requireSignin, userMiddleware } = require('../common-middleware');
-const { createOrder, rateUser, getOrderbyUser, checkedout,getRevenuebyMonth, createInvoice, updateOrder} = require('../controllers/order');
+const { createOrder, rateUser, getOrderbyUser, checkedout,getRevenuebyMonth, createInvoice, updateOrder, getRevenuebyDay} = require('../controllers/order');
 const router = express.Router();
 
 
@@ -11,4 +11,5 @@ router.patch('/order/checkedoutorder', checkedout)
 router.get('/order/getrevenue/:year', getRevenuebyMonth)
 router.post('/order/createinvoice',createInvoice)
 router.patch('/order/updatestatus',updateOrder)
+router.post('/order/getrevenuebydate',getRevenuebyDay)
 module.exports = router;
