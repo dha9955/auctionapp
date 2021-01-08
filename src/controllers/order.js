@@ -317,3 +317,7 @@ exports.updateOrder = (req, res) => {
     }
   });
 };
+
+exports.getRevenuebyDay = (req, res)=>{
+  
+}

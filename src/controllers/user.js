@@ -89,8 +89,6 @@ exports.updateUser = (req, res) => {
     }
   });
 };
-
-
 exports.updateUser2 = (req, res) => {
   User.findOne({ _id: req.body.userId }).exec(async (error, user) => {
     if (error) {
