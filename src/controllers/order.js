@@ -299,10 +299,18 @@ exports.updateOrder = (req, res) => {
   Order.findOne({ _id: req.body.orderId }).exec((error, order) => {
     if (error) return res.status(400).json({ error });
     if (order) {
-      order.status2 = 2;
-      order.save().then(() => {
-        res.status(200).json({ message: "Customer was received product!!" });
-      });
+      if (req.body.charge == 0) {
+        order.status2 = 4;
+        order.save().then(() => {
+          res.status(200).json({ message: "status2 updated to 4" });
+        });
+      }
+      if (req.body.charge == 1) {
+        order.status2 = 2;
+        order.save().then(() => {
+          res.status(200).json({ message: "status2 updated to 2" });
+        });
+      }
     } else {
       res.status(400).json({ message: "Can't find the order!!!" });
     }
