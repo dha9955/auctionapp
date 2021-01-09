@@ -6,6 +6,7 @@ const { paginationData } = require("../common-middleware/pagination");
 const easyinvoice = require("easyinvoice");
 const nodemailer = require("nodemailer");
 const fs = require("fs");
+const moment = require("moment");
 const path = require("path");
 // create order = send mail invoice
 exports.createOrder = (req, res) => {
@@ -217,6 +218,7 @@ exports.getRevenuebyMonth = (req, res) => {
 
 // create invoice with pdf
 exports.createInvoice = async (req, res) => {
+  let date = new Date();
   let transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -263,7 +265,7 @@ exports.createInvoice = async (req, res) => {
       //"custom3": "custom value 3"
     },
     invoiceNumber: "2020.0001",
-    invoiceDate: "1-6-2021",
+    invoiceDate: date.toDateString(),
     products: [
       {
         quantity: "1",
@@ -287,7 +289,7 @@ exports.createInvoice = async (req, res) => {
     attachments: [
       {
         filename: "invoice.pdf",
-        path: __dirname + "/invoice.pdf",
+        path: __dirname + "../../../invoice.pdf",
       },
     ],
   };

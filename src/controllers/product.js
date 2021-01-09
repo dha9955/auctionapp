@@ -170,7 +170,7 @@ exports.checkExpiredProducts = (req, res) => {
                   }
                 });
               });
-            } else {
+            } else if(pro.auction == []){
               pro.status = 2;
               pro.save().then(() => {
                 return res
