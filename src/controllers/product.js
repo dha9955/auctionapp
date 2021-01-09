@@ -114,7 +114,7 @@ exports.getAllProducts = (req, res) => {
   });
 };
 
-// status = 0 chua duyet, status = 1 dang ban, status = 2 het han, status = 3 dau gia thanh cong, status = 4 la da duoc thanh toan 
+// status = 0 chua duyet, status = 1 dang ban, status = 2 het han, status = 3 dau gia thanh cong, status = 4 la da duoc thanh toan
 // status auction = 1 => dau gia thanh cong
 exports.checkExpiredProducts = (req, res) => {
   let transporter = nodemailer.createTransport({
@@ -130,52 +130,50 @@ exports.checkExpiredProducts = (req, res) => {
       // if(products == []) return res.status(200).json({message:"all products are checked and updated"})
       if (products) {
         if (products.length < 1)
-          return res
-            .status(200)
-            .json({
-              message: "all products are checked. No product expired anymore",
-            });
+          return res.status(200).json({
+            message: "all products are checked. No product expired anymore",
+          });
         else {
           for (let pro of products) {
             if (pro.auction) {
-              pro.status = 3;
-              pro.save().then(() => {
-                Auction.findOne({
-                  product: pro._id,
-                  price: pro.currentPrice,
-                }).exec((error, auction) => {
-                  if (error) return res.status(400).json({ error });
-                  if (auction) {
-                    auction.status = 1;
-                    auction.save().then(() => {
-                      User.findOne({ _id: auction.user }).exec(
-                        async (error, user) => {
-                          if (error) return res.status(400).json({ error });
-                          if (user.email) {
-                            const msg = {
-                              from: "anhdh6666@gmail.com",
-                              to: `${user.email}`,
-                              subject: "Your auction is successful",
-                              text:
-                                "Congratulations!!! Your auction is successful. Please check & confirm it. Thank you!!!",
-                            };
-                            const info = await transporter.sendMail(msg);
-                            return res.status(200).json({
-                              message: "product is auction successful !!!",
-                            });
-                          }
+              Auction.findOne({
+                product: pro._id,
+                price: pro.currentPrice,
+              }).exec((error, auction) => {
+                if (error) return res.status(400).json({ error });
+                if (auction) {
+                  pro.status = 3;
+                  pro.save();
+                  auction.status = 1;
+                  auction.save().then(() => {
+                    User.findOne({ _id: auction.user }).exec(
+                      async (error, user) => {
+                        if (error) return res.status(400).json({ error });
+                        if (user.email) {
+                          const msg = {
+                            from: "anhdh6666@gmail.com",
+                            to: `${user.email}`,
+                            subject: "Your auction is successful",
+                            text:
+                              "Congratulations!!! Your auction is successful. Please check & confirm it. Thank you!!!",
+                          };
+                          const info = await transporter.sendMail(msg);
+                          return res.status(200).json({
+                            message: "product is auction successful !!!",
+                          });
                         }
-                      );
-                    });
-                  }
-                });
-              });
-            } else if(pro.auction == []){
-              pro.status = 2;
-              pro.save().then(() => {
-                return res
-                  .status(200)
-                  .json({ message: "product is expired !!!" });
+                      }
+                    );
+                  });
+                }
+                if (!auction) {
+                  pro.status = 2;
+                  pro.save().then(() => {
+                    return res
+                      .status(200)
+                      .json({ message: "product is expired !!!" });
+                  });
+                }
               });
             }
           }
@@ -280,13 +278,12 @@ exports.searchProduct = (req, res) => {
   });
 };
 
-
 exports.getProductHistory = (req, res) => {
-  const {userId} = req.params;
-  Product.find({owner:userId, status:[2,3]}).exec((error, products)=>{
+  const { userId } = req.params;
+  Product.find({ owner: userId, status: [2, 3] }).exec((error, products) => {
     if (error) return res.status(400).json({ error });
-    if(products){
-      res.status(200).json({products})
+    if (products) {
+      res.status(200).json({ products });
     }
-  })
-}
+  });
+};
